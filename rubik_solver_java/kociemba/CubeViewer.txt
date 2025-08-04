@@ -1,0 +1,55 @@
+import javax.swing.*;
+import java.awt.*;
+import java.util.HashMap;
+
+public class CubeViewer extends JFrame {
+    private final String cubeState;
+
+    public CubeViewer(String cubeState) {
+        this.cubeState = cubeState;
+        setTitle("Rubik's Cube Viewer");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(500, 500);
+        setLayout(null);
+        drawCube();
+        setVisible(true);
+    }
+
+    private void drawCube() {
+        int size = 30;
+        int gap = 2;
+
+        HashMap<Character, Color> colorMap = new HashMap<>();
+        colorMap.put('U', Color.WHITE);
+        colorMap.put('R', Color.RED);
+        colorMap.put('F', Color.GREEN);
+        colorMap.put('D', Color.YELLOW);
+        colorMap.put('L', Color.ORANGE);
+        colorMap.put('B', Color.BLUE);
+
+        int[][] positions = {
+            // U face
+            {3, 0},
+            // L, F, R, B faces
+            {0, 3}, {3, 3}, {6, 3}, {9, 3},
+            // D face
+            {3, 6}
+        };
+
+        int idx = 0;
+        for (int f = 0; f < 6; f++) {
+            int startX = positions[f][0];
+            int startY = positions[f][1];
+            for (int i = 0; i < 3; i++) {
+                for (int j = 0; j < 3; j++) {
+                    char facelet = cubeState.charAt(idx++);
+                    JPanel cell = new JPanel();
+                    cell.setBackground(colorMap.getOrDefault(facelet, Color.GRAY));
+                    cell.setBounds((startX + j) * size, (startY + i) * size, size - gap, size - gap);
+                    cell.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+                    add(cell);
+                }
+            }
+        }
+    }
+}
